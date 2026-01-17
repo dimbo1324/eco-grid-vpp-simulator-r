@@ -1,8 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 func main() {
-	v := 101
-	fmt.Println(v%10 == 0)
+	properties := map[string]string{
+		"qwe": "awe",
+	}
+
+	fmt.Println(reflect.TypeOf(properties["qwe"]))
+
 }

@@ -2,7 +2,7 @@ package interfaces
 
 import "time"
 
-// Описывает статические данные локации (то, что не меняется).
+// TODO: docs and discription
 type LocationProfile struct {
 	ID         int
 	City       string
@@ -11,28 +11,28 @@ type LocationProfile struct {
 	Latitude   float64
 	Longitude  float64
 	Timezone   string
-	BaseHeight float64 // Высота измерения (обычно 10м)
-	HubHeight  float64 // Высота ступицы турбины (например, 100м)
-	Roughness  float64 // Шероховатость (0.1 море, 0.4 город)
+	BaseHeight float64
+	HubHeight  float64
+	Roughness  float64
 }
 
-// Описывает текущий "срез" реальности.
+// TODO: docs and discription
 type EnvironmentState struct {
-	Season      string    // Зима, Весна...
-	TimeOfDay   string    // Утро, День, Вечер, Ночь
-	WeatherType string    // Ясно, Дождь, Шторм...
-	Temperature float64   // Градусы Цельсия
-	Pressure    float64   // Паскали (Pa)
-	WeibullK    float64   // Параметр формы (Shape)
-	WeibullC    float64   // Параметр масштаба (Scale)
-	Timestamp   time.Time // Локальное время
+	Season      string
+	TimeOfDay   string
+	WeatherType string
+	Temperature float64
+	Pressure    float64
+	WeibullK    float64
+	WeibullC    float64
+	Timestamp   time.Time
 }
 
-// Помогает задать границы параметров для разных типов погоды.
+// TODO: docs and discription
 type WeatherScenario struct {
 	Name        string
-	TempOffset  int64 // Смещение температуры относительно сезона
-	PressOffset int64 // Смещение давления (шторм = низкое, ясно = высокое)
-	WindScale   int64 // Базовая сила ветра (для Weibull C)
-	Turbulence  int64 // Уровень турбулентности (влияет на Weibull K: выше число = ниже K)
+	TempOffset  int64
+	PressOffset int64
+	WindScale   int64
+	Turbulence  int64
 }

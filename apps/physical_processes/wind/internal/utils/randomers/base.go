@@ -35,7 +35,6 @@ func randomFloat(min, max float64, mathPr int) float64 {
 		return min
 	}
 	return float64(val) / float64(mathPr)
-	// mathematical precision
 }
 
 // TODO: docs and discription

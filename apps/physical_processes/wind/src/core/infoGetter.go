@@ -61,7 +61,7 @@ func getTimeOfDay(hour int) string {
 }
 
 // TODO: docs and discription
-func generateWeatherSimulation( /*loc interfaces.LocationProfile,*/ t time.Time) interfaces.EnvironmentState {
+func GenerateWeatherSimulation(loc interfaces.LocationProfile, t time.Time) interfaces.EnvironmentState {
 	season := getSeason(t.Month())
 	timeOfDay := getTimeOfDay(t.Hour())
 

@@ -75,3 +75,12 @@ func GetRandArrVal[T any](slice []T) (T, error) {
 	}
 	return slice[randIdx], nil
 }
+
+func GenerateCanonicalFloat() (float64, error) {
+	const maxInt = int64(1 << 53)
+	randInt, err := createRandValue(0, maxInt)
+	if err != nil {
+		return 0.0, err
+	}
+	return float64(randInt) / float64(maxInt), nil
+}

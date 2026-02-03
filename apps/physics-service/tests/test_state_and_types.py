@@ -1,4 +1,3 @@
-# app/tests/test_state_and_types.py
 from app.core.state import BoilerInputs, BoilerOutputs, BoilerState
 import time
 

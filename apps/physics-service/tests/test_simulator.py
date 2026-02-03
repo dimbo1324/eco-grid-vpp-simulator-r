@@ -92,3 +92,51 @@ def test_drum_level_clamped_to_bounds(monkeypatch, simulator):
 
     simulator.tick()
     assert simulator.outputs.drum_level <= settings.MAX_DRUM_LEVEL
+
+
+def test_multiple_ticks_accumulate_changes(monkeypatch, simulator):
+    simulator.outputs.furnace_temp = 20.0
+    simulator.inputs.fuel_valve = 50.0
+    simulator.last_tick_time = 0.0
+
+    for t in [1.0, 2.0, 3.0]:
+        monkeypatch.setattr("time.time", lambda: t)
+        simulator.tick()
+
+    target_temp = settings.AMBIENT_TEMP + settings.MAX_FURNACE_TEMP * (50.0 / 100.0)
+    expected = 20.0
+    for _ in range(3):
+        expected += (target_temp - expected) * settings.HEATING_RATE * 1.0
+    assert simulator.outputs.furnace_temp == pytest.approx(expected)
+
+
+def test_zero_pressure_when_loss_exceeds_base(monkeypatch, simulator):
+    simulator.outputs.furnace_temp = 100.0
+    simulator.inputs.steam_valve = 100.0
+    simulator.last_tick_time = 0.0
+    monkeypatch.setattr("time.time", lambda: 10.0)
+    simulator.tick()
+    assert simulator.outputs.steam_pressure == 0.0
+    assert simulator.outputs.steam_flow == 0.0
+
+
+def test_get_state_timestamp_updates(simulator):
+    initial_state = simulator.get_state()
+    assert initial_state.timestamp > 0
+    import time
+
+    time.sleep(0.1)
+    new_state = simulator.get_state()
+    assert new_state.timestamp > initial_state.timestamp
+
+
+from hypothesis import given
+from hypothesis.strategies import floats
+
+
+@given(fuel=floats(0, 100), water=floats(0, 100), steam=floats(0, 100))
+def test_set_controls_clamps_hypothesis(simulator, fuel, water, steam):
+    simulator.set_controls(fuel, water, steam)
+    assert 0 <= simulator.inputs.fuel_valve <= 100
+    assert 0 <= simulator.inputs.feedwater_valve <= 100
+    assert 0 <= simulator.inputs.steam_valve <= 100

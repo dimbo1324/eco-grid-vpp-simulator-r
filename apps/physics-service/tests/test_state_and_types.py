@@ -11,3 +11,10 @@ def test_dataclasses_default_values():
     assert isinstance(state.timestamp, float)
     assert state.inputs is inp
     assert state.outputs is out
+
+
+def test_settings_from_env(monkeypatch):
+    monkeypatch.setenv("BOILER_HEATING_RATE", "0.5")
+    from app.settings import settings
+
+    assert settings.HEATING_RATE == 0.5

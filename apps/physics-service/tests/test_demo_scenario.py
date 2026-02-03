@@ -28,3 +28,21 @@ def test_get_demo_controls_stages(elapsed, step_duration, expected_index):
     ]
     exp = stages[min(int(elapsed // step_duration), len(stages) - 1)]
     assert (stage_name, fuel, water, steam) == exp
+
+
+@pytest.mark.asyncio
+async def test_run_demo_console_simulation_brief(monkeypatch, simulator):
+    from app.runners.console import run_demo_console_simulation
+    import asyncio
+
+    times = [0.0, 1.0, 11.0]
+    monkeypatch.setattr("time.time", lambda: times.pop(0))
+
+    task = asyncio.create_task(
+        run_demo_console_simulation(simulator, update_interval=0.5, step_duration=10.0)
+    )
+    await asyncio.sleep(0.2)
+    task.cancel()
+
+    assert simulator.inputs.fuel_valve == 50.0
+    assert simulator.inputs.feedwater_valve == 10.0

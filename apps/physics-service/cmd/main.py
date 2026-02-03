@@ -22,14 +22,15 @@ async def run_simulation():
             state = sim.get_state()
 
             current_loop_time = asyncio.get_running_loop().time() - start_time
+            step = 10
 
-            if 0 < current_loop_time < 10:
+            if 0 < current_loop_time < step:
                 sim.set_controls(fuel=50.0, water=10.0, steam=0.0)
                 status = "РАЗОГРЕВ"
-            elif 10 < current_loop_time < 20:
+            elif step < current_loop_time < 2 * step:
                 sim.set_controls(fuel=100.0, water=20.0, steam=0.0)
                 status = "ФОРСАЖ"
-            elif 20 < current_loop_time < 30:
+            elif 2 * step < current_loop_time < 3 * step:
                 sim.set_controls(fuel=100.0, water=25.0, steam=80.0)
                 status = "ОТДАЧА ПАРА"
             else:

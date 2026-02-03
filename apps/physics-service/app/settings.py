@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings
 
 # TODO: make comments and docs
 class Settings(BaseSettings):
+    AMBIENT_TEMP: float = 20.0
     MAX_FURNACE_TEMP: float = 1200.0
     HEATING_RATE: float = 0.05
     COOLING_RATE: float = 0.02

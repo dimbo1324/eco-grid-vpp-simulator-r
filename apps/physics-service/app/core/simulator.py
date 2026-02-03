@@ -1,6 +1,7 @@
 import time
 from app import settings
 from app.core.state import BoilerInputs, BoilerOutputs, BoilerState
+from app.core.steam_table import SteamTable
 
 
 class BoilerSimulator:
@@ -36,7 +37,7 @@ class BoilerSimulator:
         # ----- 1. Temperature calculation (inertion) -----
         # -----
         # Target temperature depends on the fuel opening (linearly)
-        target_temp = 20.0 + (
+        target_temp = settings.AMBIENT_TEMP + (
             settings.MAX_FURNACE_TEMP * (self.inputs.fuel_valve / 100.0)
         )
         # If the current temperature is lower than the target temperature, we heat up; else, we cool down
@@ -53,11 +54,8 @@ class BoilerSimulator:
         # -----
         # ----- 2. Pressure calculation -----
         # -----
-        # Base pressure depends on the temperature (at the moment P ~ T), TODO: make more real calculation of press-temperature depending
-        # P_base = (Temp / Max_Temp) * Max_Pressure
-        base_pressure = (
-            self.outputs.furnace_temp / settings.MAX_FURNACE_TEMP
-        ) * settings.MAX_PRESSURE
+        # Base pressure depends on the temperature
+        base_pressure = SteamTable.get_pressure(self.outputs.furnace_temp)
         pressure_loss = self.inputs.steam_valve * settings.PRESSURE_DROP_RATE * dt
         # The final pressure (cannot be less than 0)
         self.outputs.steam_pressure = max(0.0, base_pressure - pressure_loss)

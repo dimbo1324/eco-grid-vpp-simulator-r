@@ -1,4 +1,5 @@
 from app.core.state import BoilerInputs, BoilerOutputs, BoilerState
+from app.settings import Settings
 import time
 
 
@@ -15,6 +16,5 @@ def test_dataclasses_default_values():
 
 def test_settings_from_env(monkeypatch):
     monkeypatch.setenv("BOILER_HEATING_RATE", "0.5")
-    from app.settings import settings
-
+    settings = Settings()
     assert settings.HEATING_RATE == 0.5

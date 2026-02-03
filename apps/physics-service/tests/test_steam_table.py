@@ -47,9 +47,16 @@ def test_get_pressure_interpolation_and_extremes(temp, expected):
     if expected is not None:
         assert p == pytest.approx(expected)
     else:
-        ratio = (100.5 - 100.0) / (105.0 - 100.0)
-        exp = 1.01325 + (1.208 - 1.01325) * ratio
-        assert p == pytest.approx(exp)
+        data = sorted(SteamTable._DATA)
+        for i in range(len(data) - 1):
+            t1, p1 = data[i]
+            t2, p2 = data[i + 1]
+            if t1 <= temp <= t2:
+                ratio = (temp - t1) / (t2 - t1)
+                exp = p1 + (p2 - p1) * ratio
+                assert p == pytest.approx(exp)
+                return
+        pytest.fail(f"No interpolation range for {temp}")
 
 
 from hypothesis import given

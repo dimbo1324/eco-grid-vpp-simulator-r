@@ -35,14 +35,29 @@ async def test_run_demo_console_simulation_brief(monkeypatch, simulator):
     from app.runners.console import run_demo_console_simulation
     import asyncio
 
-    times = [0.0, 1.0, 11.0]
-    monkeypatch.setattr("time.time", lambda: times.pop(0))
+    times = [
+        0.0,
+        1.0,
+        1.0,
+    ]
+
+    def mock_time():
+        return times.pop(0)
+
+    monkeypatch.setattr("time.time", mock_time)
+    monkeypatch.setattr("builtins.print", lambda *args, **kwargs: None)
 
     task = asyncio.create_task(
-        run_demo_console_simulation(simulator, update_interval=0.5, step_duration=10.0)
+        run_demo_console_simulation(simulator, update_interval=0.1, step_duration=10.0)
     )
-    await asyncio.sleep(0.2)
+    await asyncio.sleep(0.01)
     task.cancel()
+
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
 
     assert simulator.inputs.fuel_valve == 50.0
     assert simulator.inputs.feedwater_valve == 10.0
+    assert simulator.inputs.steam_valve == 0.0

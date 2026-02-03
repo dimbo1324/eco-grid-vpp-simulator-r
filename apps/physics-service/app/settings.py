@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 
 
-# TODO: comments and docs
+# TODO: make comments and docs
 class Settings(BaseSettings):
     MAX_FURNACE_TEMP: float = 1200.0
     HEATING_RATE: float = 0.05
@@ -12,8 +12,10 @@ class Settings(BaseSettings):
     EVAPORATION_RATE: float = 2.0
     FEEDWATER_RATE: float = 2.5
 
+    # TODO: make comments and docs
     class Config:
         env_prefix = "BOILER_"
 
 
+# TODO: make comments and docs
 settings = Settings()

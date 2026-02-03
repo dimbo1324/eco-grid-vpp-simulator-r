@@ -16,7 +16,9 @@ def test_tick_temperature_heating_and_cooling(monkeypatch, simulator):
     simulator.outputs.furnace_temp = 20.0
     simulator.inputs.fuel_valve = 100.0
 
-    monkeypatch.setattr("time.time", lambda: 10.0)
+    monkeypatch.setattr(
+        "time.time", lambda: 10.0
+    )
     simulator.last_tick_time = 0.0
     simulator.tick()
 
@@ -35,7 +37,9 @@ def test_tick_temperature_heating_and_cooling(monkeypatch, simulator):
     monkeypatch.setattr("time.time", lambda: 20.0)
     simulator.last_tick_time = 10.0
     simulator.tick()
-    expected_change2 = (target_temp - (target_temp + 50.0)) * cooling_rate * 10.0
+    expected_change2 = (
+        (target_temp - (target_temp + 50.0)) * cooling_rate * 10.0
+    )
     assert simulator.outputs.furnace_temp == pytest.approx(
         (target_temp + 50.0) + expected_change2
     )
@@ -43,7 +47,9 @@ def test_tick_temperature_heating_and_cooling(monkeypatch, simulator):
 
 def test_tick_pressure_and_flow_and_level(monkeypatch, simulator):
     simulator.outputs.furnace_temp = 120.0
-    simulator.inputs.fuel_valve = 100.0
+    simulator.inputs.fuel_valve = (
+        (simulator.outputs.furnace_temp - 20.0) / 1200.0
+    ) * 100.0
     simulator.inputs.steam_valve = 50.0
     simulator.inputs.feedwater_valve = 10.0
     simulator.outputs.drum_level = 500.0

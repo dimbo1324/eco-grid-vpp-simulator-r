@@ -39,6 +39,7 @@ async def test_run_demo_console_simulation_brief(monkeypatch, simulator):
         0.0,
         1.0,
         1.0,
+        1.0,
     ]
 
     def mock_time():

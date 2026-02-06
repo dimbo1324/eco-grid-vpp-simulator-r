@@ -5,19 +5,36 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.core.simulator import BoilerSimulator
-from app.runners.console import run_demo_console_simulation
+from app.server.grpc_server import start_grpc_server
+
+
+async def physics_loop(sim: BoilerSimulator):
+    print("Physics Engine started")
+
+    try:
+        while True:
+            sim.tick()
+            await asyncio.sleep(0.1)
+    except asyncio.CancelledError:
+        print("Physics Engine stopped")
 
 
 async def main():
-    simulator = BoilerSimulator()
-    await run_demo_console_simulation(simulator)
+    sim = BoilerSimulator()
+
+    physics_task = asyncio.create_task(physics_loop(sim))
+
+    try:
+        await start_grpc_server(sim, port=50051)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        physics_task.cancel()
+        await physics_task
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\nSIMULATION STOPPED")
-    except Exception as e:
-        print(f"Critical error: {e}", file=sys.stderr)
-        sys.exit(1)
+        print("\nSee you next time!")

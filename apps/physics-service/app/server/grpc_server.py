@@ -27,18 +27,18 @@ class BoilerRPCServicer(boiler_pb2_grpc.BoilerPhysicsServicer):
             )
             return await self.GetStatus(request, context)
 
-        async def start_grpc_server(simulator: BoilerSimulator, port: int = 50051):
-            server = grpc.aio.server()
-            boiler_pb2_grpc.add_BoilerPhysicsServicer_to_server(
-                BoilerRPCServicer(simulator), server
-            )
-            server.add_insecure_port(f"[::]:{port}")
-            print(f"gRPC Server starting on port {port}...")
-            await server.start()
+    async def start_grpc_server(simulator: BoilerSimulator, port: int = 50051):
+        server = grpc.aio.server()
+        boiler_pb2_grpc.add_BoilerPhysicsServicer_to_server(
+            BoilerRPCServicer(simulator), server
+        )
+        server.add_insecure_port(f"[::]:{port}")
+        print(f"gRPC Server starting on port {port}...")
+        await server.start()
 
-            try:
-                await server.wait_for_termination()
+        try:
+            await server.wait_for_termination()
 
-            except asyncio.CancelledError:
-                print("gRPC Server stopping...")
-                await server.stop(grace=None)
+        except asyncio.CancelledError:
+            print("gRPC Server stopping...")
+            await server.stop(grace=None)

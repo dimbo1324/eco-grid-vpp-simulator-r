@@ -183,6 +183,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "grpcio-tools" },
     { name = "hypothesis" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -199,6 +200,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "grpcio-tools", specifier = ">=1.76.0" },
     { name = "hypothesis", specifier = ">=6.151.4" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-asyncio", specifier = ">=1.3.0" },

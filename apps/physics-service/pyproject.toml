@@ -26,3 +26,6 @@ dev = [
     "pytest-cov>=7.0.0",
     "pytest-html>=4.2.0",
 ]
+
+[tool.uv]
+package = false
